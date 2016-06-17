@@ -15,6 +15,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import negocio.Servicio;
+import negocio.Unidad;
 
 /**
  *
@@ -37,7 +38,33 @@ public class Tarea extends HttpServlet {
         try (PrintWriter out = response.getWriter()) {
             //Conexion
             Conexion con = new Conexion();
-            con.setConsulta("select * from Servicios");
+            if(request.getParameter("servicio_id") != null){
+                String servicio_id = request.getParameter("servicio_id");
+                con.setConsulta("select * from unidades where servicio_id = '" + servicio_id + "'");
+                ArrayList lista = new ArrayList();
+                try {
+                    while(con.getResultado().next()) {
+                        Unidad uni = new Unidad();
+                        uni.setUnidad_id(con.getResultado().getInt("unidad_id"));
+                        uni.setNombre(con.getResultado().getString("nombre"));
+                        uni.setEstado(con.getResultado().getString("estado"));
+                        uni.setServicio_id(con.getResultado().getInt("servicio_id"));
+                        lista.add(uni);
+                    }
+                } catch (SQLException ex){
+                    
+                }
+                //variable json con arraylist
+            String json = new Gson().toJson(lista);
+            //setear aplicacion json
+            response.setContentType("application/json");
+            //encodear a utf8
+            response.setCharacterEncoding("UTF-8");
+            //mostrar o imprimir el json
+            response.getWriter().write(json);
+            }
+            else {
+                con.setConsulta("select * from Servicios");
             ArrayList lista = new ArrayList();
             //Crear objetos y guardarlos en lista
             try {
@@ -58,6 +85,7 @@ public class Tarea extends HttpServlet {
             response.setCharacterEncoding("UTF-8");
             //mostrar o imprimir el json
             response.getWriter().write(json);
+            }
         }
     }
 
