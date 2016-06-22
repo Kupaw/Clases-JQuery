@@ -30,7 +30,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="#">Prueba3</a>
+          <a class="navbar-brand" href="#">JavaEE</a>
                 </div>
                 <div id="navbar" class="collapse navbar-collapse">
                     <ul class="nav navbar-nav">
@@ -47,6 +47,9 @@
                         <h3 class="panel-title">Lista de Tareas</h3>
                     </div>
                     <div class="panel-body">
+                        <a href="index.jsp" class="btn btn-primary">Asignar nueva tarea</a>
+                        <br>
+                        <br>
                         <table class="table table-condensed table-hover">
                             <thead>
                                 <th>ID</th>

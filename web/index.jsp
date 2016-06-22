@@ -68,7 +68,7 @@
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
                     </button>
-                    <a class="navbar-brand" href="#">Project name</a>
+                    <a class="navbar-brand" href="#">JavaEE</a>
                     <ul class="nav navbar-nav">
                         <li><a href="listatareas.jsp">Tareas</a></li>
                     </ul>
