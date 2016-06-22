@@ -18,7 +18,7 @@
         <script>
             $(document).ready(function () {
                 $('select').select2();
-                $('#servicios').append('<option> Seleccionar Servicio</option>');
+                $('#servicios').append('<option value="none"> Seleccionar Servicio</option>');
                 $.get("http://localhost:8080/Jquery/Tarea", function (data, status) {
                     $.each(data, function (i, item) {
                         $("#servicios").append("<option value=" + item.servicio_id + ">" + item.nombre + "</option>");
@@ -26,10 +26,30 @@
                 });
                 $("#servicios").change(function () {
                     $("#unidades").empty();
+                    $("#responsables").empty();
+                    $("#unidades").removeAttr('disabled');
+                    $('#unidades').append('<option> Seleccionar Unidad</option>');
+                    $('#responsables').append('<option> Seleccionar Responsable</option>');
                     var servicio_id = $("#servicios").val();
+                    
+                        if(servicio_id == "none"){
+                            $("#unidades").prop('disabled',true);
+                        }
+                        
                     $.get("http://localhost:8080/Jquery/Tarea?servicio_id=" + servicio_id, function(data, status) {
                         $.each(data, function(i, item) {
                             $("#unidades").append("<option value=" + item.unidad_id + ">" + item.nombre + "</option>");
+                        });
+                    });
+                });
+                $("#unidades").change(function () {
+                    $("#responsables").empty();
+                    $("#responsables").prop('disabled',false);
+                    $('#responsables').append('<option> Seleccionar Responsable</option>');
+                    var unidad_id = $("#unidades").val();
+                    $.get("http://localhost:8080/Jquery/Tarea?unidad_id=" + unidad_id, function(data, status) {
+                        $.each(data, function(i, item) {
+                            $("#responsables").append("<option value=" + item.reponsable_id + ">" + item.nombre + "</option>");
                         });
                     });
                 });
@@ -49,6 +69,9 @@
                         <span class="icon-bar"></span>
                     </button>
                     <a class="navbar-brand" href="#">Project name</a>
+                    <ul class="nav navbar-nav">
+                        <li><a href="listatareas.jsp">Tareas</a></li>
+                    </ul>
                 </div>
                 <div id="navbar" class="collapse navbar-collapse">
                     <ul class="nav navbar-nav">
@@ -59,7 +82,7 @@
 
         <div class="container">
             <br><br><br>
-            <form>
+            <form action="Tarea" method="post">
                 <div class="form-group">
                     <label for="servicios">Seleccionar Servicio</label>
                     <select name="servicio_id" id="servicios" class="form-control">
@@ -68,21 +91,25 @@
                 </div>
                 <div class="form-group">
                     <label for="unidades">Seleccionar Unidad</label>
-                    <select name="unidad_id" id="unidades" class="form-control">
+                    <select name="unidad_id" id="unidades" class="form-control" disabled>
 
                     </select>
                 </div>
                 <div class="form-group">
                     <label for="responsable_id">Seleccionar Responsables</label>
-                    <select name="reponsable_id" id="responsables" class="form-control">
+                    <select name="reponsable_id" id="responsables" class="form-control" disabled>
 
                     </select>
                 </div>
                 <div class="form-group">
-                    <label for="servicio">Asignar Tarea</label>
+                    <label for="fecha_tarea">Fecha de ingreso</label>
+                    <input type="date" name="fecha_tarea" id="fecha_tarea" class="form-control">
+                </div>
+                <div class="form-group">
+                    <label for="tareas">Asignar Tarea</label>
                     <textarea name="tarea" id="tareas" rows="4" class="form-control"></textarea>
                 </div>
-                <button type="submit" class="btn btn-danger" id="guardar">Asignar Tarea</button>
+                <button type="submit" class="btn btn-danger" id="guardar" name="guardar">Asignar Tarea</button>
             </form>
         </div><!-- /.container -->
 

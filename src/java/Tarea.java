@@ -14,6 +14,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import negocio.Responsable;
 import negocio.Servicio;
 import negocio.Unidad;
 
@@ -38,6 +39,13 @@ public class Tarea extends HttpServlet {
         try (PrintWriter out = response.getWriter()) {
             //Conexion
             Conexion con = new Conexion();
+            if(request.getParameter("guardar") != null){
+                String nombre = request.getParameter("tarea");
+                int responsable_id = Integer.parseInt(request.getParameter("reponsable_id"));
+                String fecha_tarea = request.getParameter("fecha_tarea");
+                con.setInsertar("insert into tareas(nombre,responsable_id,estado,fecha_tarea) values('" + nombre + "','" + responsable_id +"','Activo','" + fecha_tarea + "');");
+                response.sendRedirect("index.jsp");
+            }
             if(request.getParameter("servicio_id") != null){
                 String servicio_id = request.getParameter("servicio_id");
                 con.setConsulta("select * from unidades where servicio_id = '" + servicio_id + "'");
@@ -50,6 +58,31 @@ public class Tarea extends HttpServlet {
                         uni.setEstado(con.getResultado().getString("estado"));
                         uni.setServicio_id(con.getResultado().getInt("servicio_id"));
                         lista.add(uni);
+                    }
+                } catch (SQLException ex){
+                    
+                }
+                //variable json con arraylist
+            String json = new Gson().toJson(lista);
+            //setear aplicacion json
+            response.setContentType("application/json");
+            //encodear a utf8
+            response.setCharacterEncoding("UTF-8");
+            //mostrar o imprimir el json
+            response.getWriter().write(json);
+            }
+            else if(request.getParameter("unidad_id") != null){
+                String unidad_id = request.getParameter("unidad_id");
+                con.setConsulta("select * from responsables where unidad_id = '" + unidad_id + "'");
+                ArrayList lista = new ArrayList();
+                try {
+                    while(con.getResultado().next()) {
+                        Responsable res = new Responsable();
+                        res.setReponsable_id(con.getResultado().getInt("reponsable_id"));
+                        res.setNombre(con.getResultado().getString("nombre"));
+                        res.setEstado(con.getResultado().getString("estado"));
+                        res.setUnidad_id(con.getResultado().getInt("unidad_id"));
+                        lista.add(res);
                     }
                 } catch (SQLException ex){
                     

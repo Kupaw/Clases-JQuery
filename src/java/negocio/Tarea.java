@@ -38,5 +38,6 @@ public class Tarea {
 
     public void setReponsable_id(int reponsable_id) {
         this.reponsable_id = reponsable_id;
-    }       
+    }
+    
 }
